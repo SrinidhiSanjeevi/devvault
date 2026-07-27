@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devvault-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devvault-backend
+  template:
+    metadata:
+      labels:
+        app: devvault-backend
+    spec:
+      containers:
+      - name: backend
+        image: devvault-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: devvault-config
+        - secretRef:
+            name: devvault-secrets
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devvault-backend-service
+spec:
+  selector:
+    app: devvault-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devvault-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devvault-frontend
+  template:
+    metadata:
+      labels:
+        app: devvault-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: devvault-frontend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devvault-frontend-service
+spec:
+  selector:
+    app: devvault-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

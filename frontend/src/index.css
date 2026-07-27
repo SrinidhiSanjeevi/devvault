@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-background: #ffffff;
+  --color-surface: #f3f4f6;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  
+  --color-dark-background: #0f172a;
+  --color-dark-surface: #1e293b;
+  --color-dark-text: #f8fafc;
+  --color-dark-text-muted: #94a3b8;
+}
+
+@layer base {
+  :root {
+    --bg-color: var(--color-background);
+    --surface-color: var(--color-surface);
+    --text-color: var(--color-text);
+    --text-muted: var(--color-text-muted);
+  }
+
+  .dark {
+    --bg-color: var(--color-dark-background);
+    --surface-color: var(--color-dark-surface);
+    --text-color: var(--color-dark-text);
+    --text-muted: var(--color-dark-text-muted);
+  }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', system-ui, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+  }
+}
+
+.card {
+  @apply bg-[var(--surface-color)] p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-transform hover:-translate-y-1 hover:shadow-md;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white hover:bg-blue-700;
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+}
+
+.input-field {
+  @apply w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow;
+}
