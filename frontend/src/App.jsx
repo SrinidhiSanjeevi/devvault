@@ -5,6 +5,10 @@ import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Notes from './pages/Notes';
+import Resources from './pages/Resources';
+import Snippets from './pages/Snippets';
+import Profile from './pages/Profile';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -48,19 +52,23 @@ function App() {
             />
             <Route 
               path="/snippets" 
-              element={isAuthenticated ? <div className="text-xl font-bold">Snippets Module Coming Soon</div> : <Navigate to="/login" />} 
+              element={isAuthenticated ? <Snippets /> : <Navigate to="/login" />} 
             />
             <Route 
               path="/resources" 
-              element={isAuthenticated ? <div className="text-xl font-bold">Resources Module Coming Soon</div> : <Navigate to="/login" />} 
+              element={isAuthenticated ? <Resources /> : <Navigate to="/login" />} 
             />
             <Route 
               path="/commands" 
-              element={isAuthenticated ? <div className="text-xl font-bold">Commands Module Coming Soon</div> : <Navigate to="/login" />} 
+              element={isAuthenticated ? <div className="text-xl font-bold text-gray-500">Commands Module Coming Soon</div> : <Navigate to="/login" />} 
             />
             <Route 
               path="/notes" 
-              element={isAuthenticated ? <div className="text-xl font-bold">Learning Notes Module Coming Soon</div> : <Navigate to="/login" />} 
+              element={isAuthenticated ? <Notes /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/profile" 
+              element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} 
             />
           </Routes>
         </main>

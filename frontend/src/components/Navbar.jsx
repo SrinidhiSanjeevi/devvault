@@ -1,5 +1,5 @@
 import { Sun, Moon, LogOut, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Navbar = ({ darkMode, setDarkMode, setIsAuthenticated }) => {
   const navigate = useNavigate();
@@ -41,9 +41,9 @@ const Navbar = ({ darkMode, setDarkMode, setIsAuthenticated }) => {
           <LogOut className="w-5 h-5" />
         </button>
         
-        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold cursor-pointer">
+        <Link to="/profile" className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold cursor-pointer hover:shadow-lg hover:scale-105 transition-transform">
           U
-        </div>
+        </Link>
       </div>
     </header>
   );

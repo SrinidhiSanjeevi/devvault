@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { Code, Link as LinkIcon, Terminal, Star, Clock } from 'lucide-react';
 
 const Dashboard = () => {
@@ -11,18 +11,22 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // We would fetch stats here. Mocking for now to avoid breaking without backend running.
-    setTimeout(() => {
-      setStats({
-        totals: { snippets: 42, resources: 18, commands: 120 },
-        favourites: { snippets: 5, resources: 3, commands: 15 },
-        recent: { 
-          snippets: [{ _id: '1', title: 'Docker Compose Traefik' }, { _id: '2', title: 'React Context Setup' }], 
-          resources: [{ _id: '1', title: 'AWS ECS Guide' }] 
-        }
-      });
-      setLoading(false);
-    }, 1000);
+    const fetchStats = async () => {
+      try {
+        const { data } = await api.get('/dashboard');
+        // Structure returned by API: { totals, favourites, recent, categoryStats }
+        setStats({
+          totals: data.totals || { snippets: 0, resources: 0, commands: 0 },
+          favourites: data.favourites || { snippets: 0, resources: 0, commands: 0 },
+          recent: data.recent || { snippets: [], resources: [] }
+        });
+      } catch (error) {
+        console.error('Failed to fetch dashboard stats', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
   }, []);
 
   if (loading) {
