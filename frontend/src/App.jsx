@@ -9,6 +9,8 @@ import Notes from './pages/Notes';
 import Resources from './pages/Resources';
 import Snippets from './pages/Snippets';
 import Profile from './pages/Profile';
+import Commands from './pages/Commands';
+import Search from './pages/Search';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -60,7 +62,11 @@ function App() {
             />
             <Route 
               path="/commands" 
-              element={isAuthenticated ? <div className="text-xl font-bold text-gray-500">Commands Module Coming Soon</div> : <Navigate to="/login" />} 
+              element={isAuthenticated ? <Commands /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/search" 
+              element={isAuthenticated ? <Search /> : <Navigate to="/login" />} 
             />
             <Route 
               path="/notes" 

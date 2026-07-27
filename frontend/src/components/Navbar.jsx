@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Sun, Moon, LogOut, Search } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -8,6 +9,14 @@ const Navbar = ({ darkMode, setDarkMode, setIsAuthenticated }) => {
     localStorage.removeItem('token');
     setIsAuthenticated(false);
     navigate('/login');
+  };
+
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
   };
 
   return (
@@ -21,6 +30,9 @@ const Navbar = ({ darkMode, setDarkMode, setIsAuthenticated }) => {
             type="text" 
             className="w-full py-2 pl-10 pr-4 rounded-lg bg-gray-100 border-none dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" 
             placeholder="Search snippets, resources, commands..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearch}
           />
         </div>
       </div>

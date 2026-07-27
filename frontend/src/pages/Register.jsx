@@ -1,18 +1,29 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../api';
 
 const Register = ({ setIsAuthenticated }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate register
-    localStorage.setItem('token', 'fake-jwt-token');
-    setIsAuthenticated(true);
-    navigate('/');
+    setError('');
+    setLoading(true);
+    try {
+      const { data } = await api.post('/auth/register', { name, email, password });
+      localStorage.setItem('token', data.token);
+      setIsAuthenticated(true);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to register account');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -24,6 +35,7 @@ const Register = ({ setIsAuthenticated }) => {
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && <div className="p-3 bg-red-100 text-red-700 rounded text-sm text-center">{error}</div>}
           <div>
             <label className="block text-sm font-medium mb-1">Name</label>
             <input 
@@ -57,8 +69,8 @@ const Register = ({ setIsAuthenticated }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit" className="w-full btn btn-primary py-3">
-            Sign Up
+          <button type="submit" disabled={loading} className="w-full btn btn-primary py-3 disabled:opacity-50">
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
         

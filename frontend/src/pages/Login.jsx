@@ -1,17 +1,28 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from '../api';
 
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate login
-    localStorage.setItem('token', 'fake-jwt-token');
-    setIsAuthenticated(true);
-    navigate('/');
+    setError('');
+    setLoading(true);
+    try {
+      const { data } = await api.post('/auth/login', { email, password });
+      localStorage.setItem('token', data.token);
+      setIsAuthenticated(true);
+      navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid email or password');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -23,6 +34,7 @@ const Login = ({ setIsAuthenticated }) => {
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && <div className="p-3 bg-red-100 text-red-700 rounded text-sm text-center">{error}</div>}
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
             <input 
@@ -45,8 +57,8 @@ const Login = ({ setIsAuthenticated }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button type="submit" className="w-full btn btn-primary py-3">
-            Sign In
+          <button type="submit" disabled={loading} className="w-full btn btn-primary py-3 disabled:opacity-50">
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
         
